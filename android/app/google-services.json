@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "88888815983",
+    "firebase_url": "https://gymq-8aad2.firebaseio.com",
+    "project_id": "gymq-8aad2",
+    "storage_bucket": "gymq-8aad2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88888815983:android:b41bc089ed85098a4e789a",
+        "android_client_info": {
+          "package_name": "com.evoura.gymnasium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "88888815983-192h4m0mcia5b2dkapsffvc1j2mgurr5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evoura.gymnasium",
+            "certificate_hash": "fb38c63bad9cd94d423a3b33d636d1560539c701"
+          }
+        },
+        {
+          "client_id": "88888815983-rjpn5nto2ibj28eq554kvjm11vqsthvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6kBvqW7Ye_CjSzOta19IamHWWBpmfJ_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "88888815983-rjpn5nto2ibj28eq554kvjm11vqsthvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
