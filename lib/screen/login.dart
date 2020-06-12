@@ -152,22 +152,15 @@ class _LoginPageState extends State<LoginPage> {
     _login();
   }
 
-  static Future<void> logout() async {
-    /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
-    try {
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('login', false);
-  }
 
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(

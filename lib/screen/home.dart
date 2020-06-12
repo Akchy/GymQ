@@ -23,7 +23,9 @@ class _HomePageState extends State<HomePage> {
 
   ShopDetails shopDetails;
   var timeList = <TimeDetails>[];
-  TimeDetails timeDetails;
+  var timeListAgain = <TimeDetails>[];
+  TimeDetails timeDetails,finalTimeDetail;
+
 
   var shopList = <ShopDetails>[];
   Firestore _db = Firestore.instance;
@@ -37,6 +39,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void loadShopDetails() async{
+
+    shopList = <ShopDetails>[];
     await _db
         .collection('shop details')
         .getDocuments()
@@ -45,20 +49,28 @@ class _HomePageState extends State<HomePage> {
         shopList.add(new ShopDetails(id: f.data['id'], name:f.data['name'],owner: f.data['owner'],phone: f.data['phone']));
       });
     });
-
-    shopList.forEach((onew) => print('xperion ${onew.owner}'));
   }
 
-  void loadShopTiming(documentID) async{
+  void loadShopTiming(shop) async{
+
+    timeList = <TimeDetails>[];
 
     await _db
-        .collection('shop details').document(documentID).collection('time').orderBy('start')
+        .collection('shop details').document(shop.id).collection('time').orderBy('start')
         .getDocuments()
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) {
-        timeList.add(new TimeDetails(count: f.data['count'],end: f.data['end'],start: f.data['start']));
+        if(f.data['count']<10)
+          timeList.add(new TimeDetails(count: f.data['count'],end: f.data['end'],start: f.data['start'],id: f.documentID));
       });
     });
+  }
+
+  Future<void> loadShopTimingAgain(shop,sTime,doc) async{
+
+    var snapShot = await _db.collection('shop details').document(shop.id).collection('time').document(doc).get();
+
+    finalTimeDetail = new TimeDetails(id: snapShot.documentID,end: snapShot.data['end'],start: snapShot.data['start'],count: snapShot['count']);
   }
 
 
@@ -87,13 +99,20 @@ class _HomePageState extends State<HomePage> {
     Navigator.popUntil(context, ModalRoute.withName('/HomeScreen'));
   }
 
-  void bookSlot() {
-    print('$fullName has registered for ${shopDetails.id} Gym during the time ${timeDetails.start} - ${timeDetails.end}');
-    /*TODO: check counter from time subcollection is less that 10, create new collection Appointment with required details
-    TODO: push with
-
-
+  void bookSlot() async{
+    /*
+    TODO: push with Named in navigator for QR code generation
      */
+    await loadShopTimingAgain(shopDetails,timeDetails.start,timeDetails.id);
+    print('asd: ${finalTimeDetail.start}');
+    if(finalTimeDetail.count<10){ // do when there is time slot left
+      var docID = await FireStoreClass.createAppt(phoneNo: phoneNo,shopName: shopDetails.name,sTime: timeDetails.start,eTime: timeDetails.end,shopID: shopDetails.id,timeDoc: timeDetails.id,count: timeDetails.count);
+
+      Navigator.popUntil(context, ModalRoute.withName('/HomeScreen'));
+
+    }
+
+
   }
 
   Widget accountExist(){ // Widget for account already existing
@@ -109,7 +128,7 @@ class _HomePageState extends State<HomePage> {
             onChanged: (ShopDetails value) {
               setState(() {
                 shopDetails = value;
-                loadShopTiming(shopDetails.id);
+                loadShopTiming(shopDetails);
               });
             },
             items: shopList.map((ShopDetails user) {
